@@ -1,5 +1,5 @@
 const { ApplicationCommandOptionType, EmbedBuilder, ChannelType } = require("discord.js");
-const { getMonthlyRanking, resetMonth } = require("@schemas/MovChat");
+const MovChat = require("@schemas/MovChat");
 
 /**
  * @type {import("@structures/Command")}
@@ -110,7 +110,7 @@ async function setupMovChat(interaction, settings) {
 
 async function showRanking(interaction) {
   const mes = interaction.options.getString("mes");
-  const ranking = await getMonthlyRanking(interaction.guildId, mes);
+  const ranking = await MovChat.getMonthlyRanking(interaction.guildId, mes);
 
   if (ranking.length === 0) {
     return interaction.followUp("📊 Nenhuma mensagem registrada para este período.");
@@ -134,7 +134,7 @@ async function showRanking(interaction) {
 
 async function resetMovChat(interaction) {
   const mes = interaction.options.getString("mes");
-  const result = await resetMonth(interaction.guildId, mes);
+  const result = await MovChat.resetMonth(interaction.guildId, mes);
   
   const targetMonth = mes || new Date().toISOString().slice(0, 7);
   
