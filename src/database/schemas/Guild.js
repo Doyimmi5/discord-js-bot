@@ -108,6 +108,11 @@ const Schema = new mongoose.Schema({
     rejected_channel: String,
     staff_roles: [String],
   },
+  movchat: {
+    enabled: Boolean,
+    channels: [String],
+    staff_roles: [String],
+  },
   staff_members: [String],
 });
 

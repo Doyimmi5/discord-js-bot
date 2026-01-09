@@ -1,6 +1,7 @@
 const { commandHandler, automodHandler, statsHandler } = require("@src/handlers");
 const { PREFIX_COMMANDS } = require("@root/config");
 const { getSettings } = require("@schemas/Guild");
+const { addMessage } = require("@schemas/MovChat");
 
 /**
  * @param {import('@src/structures').BotClient} client
@@ -30,6 +31,16 @@ module.exports = async (client, message) => {
 
   // stats handler
   if (settings.stats.enabled) await statsHandler.trackMessageStats(message, isCommand, settings);
+
+  // movchat handler
+  if (settings.movchat?.enabled && !isCommand) {
+    const isStaff = message.member.roles.cache.some(role => settings.movchat.staff_roles.includes(role.id));
+    const isMonitoredChannel = settings.movchat.channels.includes(message.channel.id);
+    
+    if (isStaff && isMonitoredChannel) {
+      await addMessage(message.guild.id, message.author.id);
+    }
+  }
 
   // if not a command
   if (!isCommand) await automodHandler.performAutomod(message, settings);
