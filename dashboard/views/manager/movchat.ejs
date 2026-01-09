@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+	<%- include('../includes/head') %>
+	
+	<body class="hold-transition skin-blue sidebar-mini">
+
+		<div class="wrapper">
+
+			<!-- The header is the topbar -->
+			<%- include('../includes/header') %>
+
+			<!-- The sidebar includes the menu -->
+			<%- include('../includes/sidebar') %>
+
+			<!-- Content Wrapper. Contains page content -->
+			<div class="content-wrapper">
+
+				<!-- Content Header (Page header) -->
+				<section class="content-header">
+					<h3> MovChat </h3>
+					<ol class="breadcrumb">
+                        <li><a href="/"><i class="fa fa-home"></i>Selector</a></li>
+                        <li><a href="<%=`/manage/${guild.id}/`%>"><%=guild.name%></a></li>
+                        <li class="active">MovChat</li>
+					</ol>
+				</section>
+
+				<section class="content">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!-- MOVCHAT CONFIGURATION -->
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Sistema MovChat</h3>
+                                </div>
+                                <form role="form" action="/manage/<%= guild.id %>/movchat/" method="POST">
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <% if(guild.movchat?.enabled) { %>
+                                                        <input type="checkbox" name="enabled" checked>Ativar MovChat
+                                                    <% } else { %>
+                                                        <input type="checkbox" name="enabled">Ativar MovChat
+                                                    <% } %>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Canais Monitorados</label>
+                                            <select class="form-control" name="channels" multiple>
+                                                <% guild.channels.cache.filter((ch) => ch.type === 0).forEach((ch) => { %>
+                                                    <% if(guild.movchat?.channels?.includes(ch.id) ){ %>
+                                                        <option selected="selected">#<%= ch.name %></option>
+                                                    <% } else { %>
+                                                        <option>#<%= ch.name %></option>
+                                                    <% } %>
+                                                <% }); %>
+                                            </select>
+                                            <small class="form-text text-muted">Selecione os canais onde as mensagens serão contabilizadas</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cargos de Staff</label>
+                                            <select class="form-control" name="staff_roles" multiple>
+                                                <% guild.roles.cache.filter((role) => !role.managed && role.name !== '@everyone').forEach((role) => { %>
+                                                    <% if(guild.movchat?.staff_roles?.includes(role.id) ){ %>
+                                                        <option selected="selected">@<%= role.name %></option>
+                                                    <% } else { %>
+                                                        <option>@<%= role.name %></option>
+                                                    <% } %>
+                                                <% }); %>
+                                            </select>
+                                            <small class="form-text text-muted">Selecione os cargos que serão contabilizados</small>
+                                        </div>
+                                    </div>
+                                    <div class="box-footer">
+                                        <button type="submit" name="movchatUpdate" class="btn btn-primary">Atualizar</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- END: MOVCHAT CONFIGURATION -->
+                        </div>
+
+                        <div class="col-md-4">
+                            <!-- INFO BOX -->
+                            <div class="box box-info">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Como Funciona</h3>
+                                </div>
+                                <div class="box-body">
+                                    <p><strong>MovChat</strong> é um sistema para contabilizar mensagens de staff.</p>
+                                    <ul>
+                                        <li>Conta mensagens apenas de usuários com cargos selecionados</li>
+                                        <li>Monitora apenas os canais configurados</li>
+                                        <li>Gera ranking mensal automaticamente</li>
+                                        <li>Reset automático todo início de mês</li>
+                                    </ul>
+                                    <hr>
+                                    <p><strong>Comandos:</strong></p>
+                                    <code>/movchat rank</code> - Ver ranking<br>
+                                    <code>/movchat reset</code> - Reset manual
+                                </div>
+                            </div>
+                            <!-- END: INFO BOX -->
+                        </div>
+
+                    </div>
+				</section>
+				
+				<!-- Footer includes credits and version -->
+			</div>
+            <!-- /.content-wrapper -->
+            
+            <%- include('../includes/footer') %>
+		</div>
+		<!-- ./wrapper -->
+	</body>
+</html>

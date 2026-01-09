@@ -59,6 +59,31 @@ router.get("/:serverID/greeting", CheckAuth, async (req, res) => {
   });
 });
 
+router.get("/:serverID/movchat", CheckAuth, async (req, res) => {
+  // Check if the user has the permissions to edit this guild
+  const guild = req.client.guilds.cache.get(req.params.serverID);
+  if (
+    !guild ||
+    !req.userInfos.displayedGuilds ||
+    !req.userInfos.displayedGuilds.find((g) => g.id === req.params.serverID)
+  ) {
+    return res.render("404", {
+      user: req.userInfos,
+      currentURL: `${req.client.config.DASHBOARD.baseURL}/${req.originalUrl}`,
+    });
+  }
+
+  // Fetch guild informations
+  const guildInfos = await utils.fetchGuild(guild.id, req.client, req.user.guilds);
+
+  res.render("manager/movchat", {
+    guild: guildInfos,
+    user: req.userInfos,
+    bot: req.client,
+    currentURL: `${req.client.config.DASHBOARD.baseURL}/${req.originalUrl}`,
+  });
+});
+
 router.post("/:serverID/basic", CheckAuth, async (req, res) => {
   // Check if the user has the permissions to edit this guild
   const guild = req.client.guilds.cache.get(req.params.serverID);
@@ -339,6 +364,53 @@ router.post("/:serverID/greeting", CheckAuth, async (req, res) => {
 
   await settings.save();
   res.redirect(303, `/manage/${guild.id}/greeting`);
+});
+
+router.post("/:serverID/movchat", CheckAuth, async (req, res) => {
+  // Check if the user has the permissions to edit this guild
+  const guild = req.client.guilds.cache.get(req.params.serverID);
+  if (
+    !guild ||
+    !req.userInfos.displayedGuilds ||
+    !req.userInfos.displayedGuilds.find((g) => g.id === req.params.serverID)
+  ) {
+    return res.render("404", {
+      user: req.userInfos,
+      currentURL: `${req.client.config.DASHBOARD.baseURL}/${req.originalUrl}`,
+    });
+  }
+
+  const settings = await getSettings(guild);
+  const data = req.body;
+
+  if (Object.prototype.hasOwnProperty.call(data, "movchatUpdate")) {
+    data.enabled = data.enabled === "on" ? true : false;
+    if (data.enabled !== (settings.movchat?.enabled || false)) {
+      if (!settings.movchat) settings.movchat = {};
+      settings.movchat.enabled = data.enabled;
+    }
+
+    if (data.channels?.length) {
+      if (typeof data.channels === "string") data.channels = [data.channels];
+      const channelIds = data.channels
+        .map((ch) => guild.channels.cache.find((c) => "#" + c.name === ch)?.id)
+        .filter((c) => c);
+      if (!settings.movchat) settings.movchat = {};
+      settings.movchat.channels = channelIds;
+    }
+
+    if (data.staff_roles?.length) {
+      if (typeof data.staff_roles === "string") data.staff_roles = [data.staff_roles];
+      const roleIds = data.staff_roles
+        .map((role) => guild.roles.cache.find((r) => "@" + r.name === role)?.id)
+        .filter((r) => r);
+      if (!settings.movchat) settings.movchat = {};
+      settings.movchat.staff_roles = roleIds;
+    }
+  }
+
+  await settings.save();
+  res.redirect(303, `/manage/${guild.id}/movchat`);
 });
 
 module.exports = router;
