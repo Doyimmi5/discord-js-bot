@@ -10,16 +10,19 @@ router.get("/login", async function (req, res) {
     // check if client user is ready
     if (!req.client.user?.id) {
       req.client.logger.debug("Client is not ready! Redirecting to /login");
-      return res.redirect("/login");
+      return res.render("login", {
+        currentURL: `${req.client.config.DASHBOARD.baseURL}${req.originalUrl}`,
+      });
     }
 
-    return res.redirect(
-      `https://discordapp.com/api/oauth2/authorize?client_id=${
+    return res.render("login", {
+      currentURL: `${req.client.config.DASHBOARD.baseURL}${req.originalUrl}`,
+      loginURL: `https://discordapp.com/api/oauth2/authorize?client_id=${
         req.client.user.id
       }&scope=identify%20guilds&response_type=code&redirect_uri=${encodeURIComponent(
         req.client.config.DASHBOARD.baseURL + "/api/callback"
       )}&state=${req.query.state || "no"}`
-    );
+    });
   }
   res.redirect("/selector");
 });
@@ -56,7 +59,7 @@ router.get("/callback", async (req, res) => {
   if (tokens.error || !tokens.access_token) {
     req.client.logger.debug(tokens);
     req.client.logger.error("Failed to login to dashboard! Check /logs folder for more details");
-    return res.redirect(`/api/login&state=${req.query.state}`);
+    return res.redirect(`/api/login?state=${req.query.state}`);
   }
   const userData = {
     infos: null,

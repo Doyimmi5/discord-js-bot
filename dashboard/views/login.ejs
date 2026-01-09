@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+	<%- include('includes/head') %>
+	
+	<body class="hold-transition login-page">
+
+		<div class="login-box">
+			<div class="login-logo">
+				<b>Discord Bot</b> Dashboard
+			</div>
+			
+			<div class="login-box-body">
+				<p class="login-box-msg">Faça login com sua conta Discord</p>
+				
+				<div class="row">
+					<div class="col-xs-12">
+						<a href="https://discordapp.com/api/oauth2/authorize?client_id=<%= process.env.CLIENT_ID || '1458575783319699587' %>&scope=identify%20guilds&response_type=code&redirect_uri=<%= encodeURIComponent(currentURL.replace('/login', '') + '/api/callback') %>&state=no" class="btn btn-primary btn-block btn-flat">
+							<i class="fa fa-discord"></i> Login com Discord
+						</a>
+					</div>
+				</div>
+				
+				<br>
+				
+				<div class="text-center">
+					<small class="text-muted">
+						Você será redirecionado para o Discord para autorizar o acesso
+					</small>
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>
