@@ -21,6 +21,10 @@ const Schema = new mongoose.Schema(
       streak: { type: Number, default: 0 },
       timestamp: Date,
     },
+    isPremium: { type: Boolean, default: false },
+    premiumUntil: { type: Date, default: null },
+    isPremium: { type: Boolean, default: false },
+    premiumUntil: { type: Date, default: null },
   },
   {
     timestamps: {
