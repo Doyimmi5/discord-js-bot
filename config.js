@@ -103,11 +103,31 @@ module.exports = {
   },
 
   PRESENCE: {
-    ENABLED: false, // Whether or not the bot should update its status
-    STATUS: "online", // The bot's status [online, idle, dnd, invisible]
-    TYPE: "WATCHING", // Status type for the bot [ CUSTOM | PLAYING | LISTENING | WATCHING | COMPETING ]
+    ENABLED: true, // Whether or not the bot should update its status
+    STATUS: "dnd", // The bot's status [online, idle, dnd, invisible]
+    TYPE: "PLAYING", // Status type for the bot [ CUSTOM | PLAYING | LISTENING | WATCHING | COMPETING ]
     // Your bot status message (note: in custom status type you won't have "Playing", "Listening", "Competing" prefix)
-    MESSAGE: ["{members} members in {servers} servers"],
+    MESSAGE: [
+      "🎮 {servers} servidores ativos",
+      "👥 {members} usuários conectados", 
+      "⚡ {ping}ms | {memory}MB RAM",
+      "🚀 Online há {uptime}",
+      "💎 {commands} comandos premium",
+      "🔥 Bot multifuncional",
+      "⭐ /help para começar",
+      "🎯 Moderação automática",
+      "🎵 Sistema de música",
+      "💰 Economia e diversão",
+      "🎪 {channels} canais",
+      "🛡️ Proteção ativa",
+      "📊 Estatísticas em tempo real",
+      "🎊 Eventos e giveaways",
+      "🔧 Configuração fácil"
+    ],
+    FAST_ROTATION: {
+      enabled: true,
+      interval: 1000 // 1 segundo
+    }
   },
 
   STATS: {
