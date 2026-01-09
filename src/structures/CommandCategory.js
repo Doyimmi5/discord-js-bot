@@ -96,4 +96,9 @@ module.exports = {
     image: "https://icons.iconarchive.com/icons/blackvariant/button-ui-system-folders-alt/128/Utilities-icon.png",
     emoji: "🛠",
   },
+  PREMIUM: {
+    name: "Premium",
+    image: "https://icons.iconarchive.com/icons/paomedia/small-n-flat/128/star-icon.png",
+    emoji: "⭐",
+  },
 };
