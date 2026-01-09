@@ -108,6 +108,7 @@ const Schema = new mongoose.Schema({
     rejected_channel: String,
     staff_roles: [String],
   },
+  staff_members: [String],
 });
 
 const Model = mongoose.model("guild", Schema);
